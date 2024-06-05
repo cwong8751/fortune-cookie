@@ -1,8 +1,13 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:fortune_cookie/providers/FortuneModel.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+      create: (BuildContext context) => FortuneModel(),
+      child: const MyApp(),
+    ));
 }
 
 class MyApp extends StatelessWidget {
@@ -32,36 +37,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _currentFortune = "";
 
-  final _fortuneList = [
-    "You will find a new friend",
-    "You will find a new friend tomorrow",
-    "A truly rich life contains love and art in abundance",
-    "Accept something that you cannot change",
-    "Adventure can be real happiness",
-    "Advice is like kissing",
-    "Advice, when most needed, is least needed",
-    "Spread love everywhere you go",
-    "Well done is better than well said",
-    "Do one thing every day that scares you"
-  ];
-
-  void _randomFortune() {
-    var random = Random();
-    int fortune = random.nextInt(_fortuneList.length);
-
-    setState(() {
-      _currentFortune = _fortuneList[fortune];
-      print("State change==>: $_currentFortune");
-    });
-
-    print(_currentFortune);
-  }
 
   @override
   Widget build(BuildContext context) {
-    print("Building the widget");
+
+    final fortune = Provider.of<FortuneModel>(context);
     return Scaffold(
       appBar: AppBar(),
       body: Center(
@@ -80,13 +61,13 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  '${_currentFortune}',
+                  fortune.currentFortune,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
             ),
             ElevatedButton(
-                onPressed: _randomFortune, child: const Text('Get fortune'))
+                onPressed: fortune.getNewFortune, child: const Text('Get fortune'))
           ],
         ),
       ),
